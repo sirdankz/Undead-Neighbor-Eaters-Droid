@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+
+// Release signing is enabled only when credentials are supplied by the local release
+// helper. Neither signing passwords nor keystores belong in the repository.
+def uneStore = System.getenv('UNE_ANDROID_KEYSTORE')
+def uneAlias = System.getenv('UNE_ANDROID_KEY_ALIAS')
+def uneStorePassword = System.getenv('UNE_ANDROID_STORE_PASSWORD')
+def uneKeyPassword = System.getenv('UNE_ANDROID_KEY_PASSWORD')
+def uneSigningReady = [uneStore, uneAlias, uneStorePassword, uneKeyPassword].every { it != null && it.length() > 0 }
+
+android {
+    namespace 'com.zamn.android'
+    compileSdk 34
+    ndkVersion '27.3.13750724'
+
+    defaultConfig {
+        applicationId 'com.zamn.android'
+        minSdk 23
+        targetSdk 34
+        versionCode 13
+        versionName 'R13-auto-rollback-beta'
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_shared', '-DCMAKE_BUILD_TYPE=RelWithDebInfo'
+                abiFilters 'arm64-v8a'
+            }
+        }
+    }
+    externalNativeBuild { cmake { path 'src/main/cpp/CMakeLists.txt'; version '3.22.1' } }
+    sourceSets {
+        main {
+            // SDLActivity from the pinned SDL2 source, without copying Java classes.
+            java.srcDirs += 'jni/SDL/android-project/app/src/main/java'
+        }
+    }
+    signingConfigs {
+        if (uneSigningReady) {
+            uneRelease {
+                storeFile file(uneStore)
+                storePassword uneStorePassword
+                keyAlias uneAlias
+                keyPassword uneKeyPassword
+            }
+        }
+    }
+    buildTypes {
+        debug { minifyEnabled false }
+        release {
+            minifyEnabled false
+            if (uneSigningReady) signingConfig signingConfigs.uneRelease
+        }
+    }
+    lint { abortOnError false }
+}

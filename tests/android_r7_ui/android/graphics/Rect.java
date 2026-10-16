@@ -1,0 +1,1 @@
+package android.graphics; public class Rect {public int left,top,right,bottom; public Rect(int a,int b,int c,int d){left=a;top=b;right=c;bottom=d;} public boolean contains(int x,int y){return x>=left&&x<right&&y>=top&&y<bottom;} public int width(){return right-left;} public int height(){return bottom-top;}}

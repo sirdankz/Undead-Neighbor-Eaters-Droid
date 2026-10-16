@@ -1,0 +1,50 @@
+# Gradle, CMake, NDK and build outputs
+.gradle/
+**/build/
+**/.cxx/
+**/.externalNativeBuild/
+android_port/local.properties
+android_port/app/jni/SDL/
+*.apk
+*.aab
+*.so
+*.o
+*.obj
+*.pdb
+out/
+
+# Third-party test include staging
+.test_sdl_include/
+
+# Local game data and user save files
+*.sfc
+*.smc
+*.fig
+*.rgb565
+*.zsv
+*.zsb
+ZAMN_SAVES/
+manual/*.pdf
+manual/*.epub
+
+# Signing credentials and secrets
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+.env
+.env.*
+!*.env.example
+
+# Local diagnostics and tools
+*.log
+.vs/
+.vscode/
+*.user
+*.suo
+Thumbs.db
+.DS_Store
+__pycache__/
+*.pyc
